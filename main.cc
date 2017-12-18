@@ -13,7 +13,7 @@ using namespace std;
 #define VVVF_STAGE4 (4.0f + VVVF_STAGE3)
 
 #define VVVF_FREQ1	600.0
-#define VVVF_FREQ2	800.0
+#define VVVF_FREQ2	810.0
 #define PI			3.1415926f
 
 #define FREQ_RATIO ((0x0FFFFFFF) / SAMP_RATE_F)
