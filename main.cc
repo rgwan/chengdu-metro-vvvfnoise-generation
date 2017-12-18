@@ -22,27 +22,26 @@ short int generatesample(float carrierfreq, float basefreq, float modulateratio)
 	float sine = 0;
 	static unsigned int phase_counter;
 	static unsigned short int saw;
-	short int compare;
+	int compare;
 
-	sine = sin(phase_counter * 2.0f * PI / 0x0FFFFFFF);
-    phase_counter += FREQ_RATIO * basefreq;
+	sine = sin(phase_counter * 2.0f * PI / 0x0FFFFFFF) * (modulateratio * 65535.0);
+	phase_counter += FREQ_RATIO * basefreq;
 
 	saw += (0xffff) / SAMP_RATE_F * carrierfreq;
-	compare = (short int) saw;
 
-    sine *= (modulateratio * 32767); /* 32767 */
+	compare = saw;
 
-    if(sine > 0)
+	if(sine > 0)
 	{
-		if(compare < sine)
-			return +32767;
+		if(compare <(int)sine)
+			return +3276;
 		else
 			return 0;
 	}
 	else
 	{
-		if(compare > sine)
-			return -32767;
+		if(compare < (int)(-sine))
+			return -3276;
 		else
 			return 0;
 	}
@@ -50,16 +49,16 @@ short int generatesample(float carrierfreq, float basefreq, float modulateratio)
 }
 int main()
 { /* 4.2s carrier: 600Hz, 2.4s carrier: 800hz, samplerate:48kHz */
-    unsigned int phase_counter = 0;
-    int t = 0;
-    short int sample;
-    unsigned short int compare;
+	unsigned int phase_counter = 0;
+	int t = 0;
+	short int sample;
+	unsigned short int compare;
 	ofstream wavefile("vvvf.raw", ios::binary);
 	for(t; t <= SAMP_RATE * 20; t++)
 	{/* MAX while motor reachs 100Hz at 20s */
 
 		if(t < SAMP_RATE * VVVF_STAGE1)
-			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 5, 0.1);//(t / SAMP_RATE_F) / 13.6);
 		if(t < SAMP_RATE * VVVF_STAGE2 && t >= SAMP_RATE * VVVF_STAGE1)
 			sample = generatesample(VVVF_FREQ2, (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
 		if(t < SAMP_RATE * VVVF_STAGE3 && t >= SAMP_RATE * VVVF_STAGE2) /* 33Hz */
@@ -72,6 +71,6 @@ int main()
 		wavefile.write((char *)&sample, 2);
 	}
 	wavefile.close();
-    return 0;
+	return 0;
 }
 
