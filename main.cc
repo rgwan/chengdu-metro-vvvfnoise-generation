@@ -8,7 +8,7 @@ using namespace std;
 #define SAMP_RATE_F 44100.0f
 
 #define VVVF_STAGE1 4.2f
-#define VVVF_STAGE2 (2.4f + VVVF_STAGE1)
+#define VVVF_STAGE2 (2.6f + VVVF_STAGE1)
 #define VVVF_STAGE3 (3.0f + VVVF_STAGE2)
 #define VVVF_STAGE4 (4.0f + VVVF_STAGE3)
 
@@ -55,18 +55,18 @@ int main()
 	unsigned short int compare;
 	ofstream wavefile("vvvf.raw", ios::binary);
 	for(t; t <= SAMP_RATE * 20; t++)
-	{/* MAX while motor reachs 100Hz at 20s */
+	{/* MAX while motor reachs 100Hz at 13.8s */
 
 		if(t < SAMP_RATE * VVVF_STAGE1)
-			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
 		if(t < SAMP_RATE * VVVF_STAGE2 && t >= SAMP_RATE * VVVF_STAGE1)
-			sample = generatesample(VVVF_FREQ2, (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
-		if(t < SAMP_RATE * VVVF_STAGE3 && t >= SAMP_RATE * VVVF_STAGE2) /* 33Hz */
-			sample = generatesample((t * 5.0 * 36.0 / SAMP_RATE_F), (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample(VVVF_FREQ2, (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
+		if(t < SAMP_RATE * VVVF_STAGE3 && t >= SAMP_RATE * VVVF_STAGE2) /* 29.5Hz 9.8s  */
+			sample = generatesample((t * 4.34 * 40 / SAMP_RATE_F), (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
 		if(t < SAMP_RATE * VVVF_STAGE4 && t >= SAMP_RATE * VVVF_STAGE3)//(t < SAMP_RATE * VVVF_STAGE4) /* 48Hz, repeat carrier to 1.2kHz */
-			sample = generatesample((t * 5.0 * 25.0 / SAMP_RATE_F), (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
-		if(t >= SAMP_RATE * VVVF_STAGE4)//(t < SAMP_RATE * VVVF_STAGE4) /* 2kHz/68Hz approx normal operation */
-			sample = generatesample(1700, 68, 1);
+			sample = generatesample((t * 4.34 * 28 / SAMP_RATE_F), (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
+		if(t >= SAMP_RATE * VVVF_STAGE4)//(t < SAMP_RATE * VVVF_STAGE4) /* 2kHz approx normal operation */
+			sample = generatesample(1680, 60, 1);
 
 		wavefile.write((char *)&sample, 2);
 	}
