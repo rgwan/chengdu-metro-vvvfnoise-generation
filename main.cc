@@ -58,7 +58,7 @@ int main()
 	{/* MAX while motor reachs 100Hz at 20s */
 
 		if(t < SAMP_RATE * VVVF_STAGE1)
-			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 5, 0.1);//(t / SAMP_RATE_F) / 13.6);
+			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
 		if(t < SAMP_RATE * VVVF_STAGE2 && t >= SAMP_RATE * VVVF_STAGE1)
 			sample = generatesample(VVVF_FREQ2, (t / SAMP_RATE_F) * 5, (t / SAMP_RATE_F) / 13.6);
 		if(t < SAMP_RATE * VVVF_STAGE3 && t >= SAMP_RATE * VVVF_STAGE2) /* 33Hz */
