@@ -7,7 +7,7 @@ using namespace std;
 #define SAMP_RATE 44100UL
 #define SAMP_RATE_F 44100.0f
 
-#define VVVF_STAGE1 4.2f
+#define VVVF_STAGE1  6.0f
 #define VVVF_STAGE2 (2.6f + VVVF_STAGE1)
 #define VVVF_STAGE3 (3.0f + VVVF_STAGE2)
 #define VVVF_STAGE4 (4.0f + VVVF_STAGE3)
@@ -58,15 +58,15 @@ int main()
 	{/* MAX while motor reachs 100Hz at 13.8s */
 
 		if(t < SAMP_RATE * VVVF_STAGE1)
-			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample(VVVF_FREQ1, (t / SAMP_RATE_F) * 4, (t / SAMP_RATE_F) / VVVF_STAGE4);
 		if(t < SAMP_RATE * VVVF_STAGE2 && t >= SAMP_RATE * VVVF_STAGE1)
-			sample = generatesample(VVVF_FREQ2, (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample(VVVF_FREQ2, (t / SAMP_RATE_F) * 4, (t / SAMP_RATE_F) / VVVF_STAGE4);
 		if(t < SAMP_RATE * VVVF_STAGE3 && t >= SAMP_RATE * VVVF_STAGE2) /* 29.5Hz 9.8s  */
-			sample = generatesample((t * 4.34 * 40 / SAMP_RATE_F), (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample((t * 4 * 34 / SAMP_RATE_F), (t / SAMP_RATE_F) * 4, (t / SAMP_RATE_F) / VVVF_STAGE4);
 		if(t < SAMP_RATE * VVVF_STAGE4 && t >= SAMP_RATE * VVVF_STAGE3)//(t < SAMP_RATE * VVVF_STAGE4) /* 48Hz, repeat carrier to 1.2kHz */
-			sample = generatesample((t * 4.34 * 28 / SAMP_RATE_F), (t / SAMP_RATE_F) * 4.34, (t / SAMP_RATE_F) / 13.6);
+			sample = generatesample((t * 4 * 26 / SAMP_RATE_F), (t / SAMP_RATE_F) * 4, (t / SAMP_RATE_F) / VVVF_STAGE4);
 		if(t >= SAMP_RATE * VVVF_STAGE4)//(t < SAMP_RATE * VVVF_STAGE4) /* 2kHz approx normal operation */
-			sample = generatesample(1680, 60, 1);
+			sample = generatesample(1622, 62.4, 1);
 
 		wavefile.write((char *)&sample, 2);
 	}
